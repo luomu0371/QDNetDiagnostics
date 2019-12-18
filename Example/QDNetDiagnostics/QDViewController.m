@@ -23,15 +23,19 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     // device info ping and traceroute
-//    self.netDiagnostics = [[QDNetDiagnostics alloc] initWithHostName:@"login.hnhdhl.com"];
-//    
-//    [self.netDiagnostics startDiagnosticAndNetInfo:^(NSString *info) {
-//        NSLog(@"%@",info);
-//    } ompleteBlock:^{
-//        
-//    }];
-    [QDNetDiagnostics startTcpPing:@"session.hnhdhl.com" port:9500 ompleteBlock:^{
-        
+    self.netDiagnostics = [[QDNetDiagnostics alloc] initWithHostName:@"www.apple.com"];
+
+    [self.netDiagnostics startDiagnosticAndNetInfo:^(NSString *info) {
+        NSLog(@"%@",info);
+    } ompleteBlock:^{
+        self.netDiagnostics = [[QDNetDiagnostics alloc] initWithHostName:@"www.baidu.com"];
+        [self.netDiagnostics startDiagnosticAndNetInfo:^(NSString *info) {
+            NSLog(@"%@",info);
+        } ompleteBlock:^{
+            [QDNetDiagnostics startTcpPing:@"www.baidu.com" port:8080 ompleteBlock:^{
+                
+            }];
+        }];
     }];
     
     

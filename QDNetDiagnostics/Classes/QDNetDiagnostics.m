@@ -46,84 +46,111 @@
 
     callback(@"begin diagnostics");
     
-    NSDictionary *dicBundle = [[NSBundle mainBundle] infoDictionary];
-    NSString *appName = [dicBundle objectForKey:@"CFBundleDisplayName"];
-    callback([NSString stringWithFormat:@"appName：%@",appName]);
-    
-    NSString *appVersion = [dicBundle objectForKey:@"CFBundleShortVersionString"];
-    callback([NSString stringWithFormat:@"appVersion：%@",appVersion]);
-    
-    UIDevice *device = [UIDevice currentDevice];
-    callback([NSString stringWithFormat:@"systemName: %@", [device systemName]]);
-    callback([NSString stringWithFormat:@"systemVersion: %@", [device systemVersion]]);
-    
-    NSString *carrierName;
-    NSString *isoCountryCode;
-    NSString *mobileCountryCode;
-    NSString *mobileNetworkCode;
-    CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
-    CTCarrier *carrier = [netInfo subscriberCellularProvider];
-    if (carrier != NULL) {
-        carrierName = [carrier carrierName];
-        isoCountryCode = [carrier isoCountryCode];
-        mobileCountryCode = [carrier mobileCountryCode];
-        mobileNetworkCode = [carrier mobileNetworkCode];
-    } else {
-        carrierName = @"";
-        isoCountryCode = @"";
-        mobileCountryCode = @"";
-        mobileNetworkCode = @"";
-    }
-    callback([NSString stringWithFormat:@"carrierName: %@", carrierName]);
-    callback([NSString stringWithFormat:@"isoCountryCode: %@", isoCountryCode]);
-    callback([NSString stringWithFormat:@"mobileCountryCode: %@", mobileCountryCode]);
-    callback([NSString stringWithFormat:@"mobileNetworkCode: %@", mobileNetworkCode]);
-    
-    NSString *netType = [QDNetDeviceInfo getNetworkType];
-    callback([NSString stringWithFormat:@"NetworkType：%@", netType]);
-
-    callback([NSString stringWithFormat:@"hostName：%@",self.hostName]);
-    
-    NSArray *ipArray = [QDNetDeviceInfo addressesForHostname:self.hostName];
-    NSString* ipStr = [ipArray componentsJoinedByString:@", "];
-    callback([NSString stringWithFormat:@"HOST to IP：%@", ipStr]);
-    
-    NSArray* localIPArray = [QDNetDeviceInfo deviceIPAdress];
-    ipStr = [localIPArray componentsJoinedByString:@", "];
-    callback([NSString stringWithFormat:@"本地IP：%@", ipStr]);
-    
-    NSArray* gatewayIpArray = [QDNetDeviceInfo getGatewayIPAddress];
-    NSString* gatewayIp = [gatewayIpArray componentsJoinedByString:@", "];
-    callback([NSString stringWithFormat:@"本地网关：%@", gatewayIp]);
-
-    
-    NSArray *dnsArray = [QDNetDeviceInfo outPutDNSServers];
-    NSString* dns = [dnsArray componentsJoinedByString:@", "];
-    callback([NSString stringWithFormat:@"本地DNS ：%@", dns]);
-    
-    dnsArray = [QDNetDeviceInfo getOutPutDNSServers];
-    dns = [dnsArray componentsJoinedByString:@", "];
-    callback([NSString stringWithFormat:@"本地DNS2：%@", dns]);
-    
-    dnsArray = [QDNetDeviceInfo getDNSsWithDormain: self.hostName];
-    dns = [dnsArray componentsJoinedByString:@", "];
-    callback([NSString stringWithFormat:@"通过域名 DNS解析结果：%@", dns]);
-    
-    [self.ping startNetServerAndCallback:^(NSString *info, NSInteger flag) {
-        if (flag == InfoFlagEnd) {
-            [self.traceroute startNetServerAndCallback:^(NSString *info_also, NSInteger flag) {
-                self.callback(info_also);
-                if (flag == InfoFlagEnd) {
-                    callback(@"end diagnostics");
-                    self.ompleteBlock();
-                    [self stop];
-                }
-            }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSDictionary *dicBundle = [[NSBundle mainBundle] infoDictionary];
+        NSString *appName = [dicBundle objectForKey:@"CFBundleDisplayName"];
+        
+        NSString *appVersion = [dicBundle objectForKey:@"CFBundleShortVersionString"];
+        
+        UIDevice *device = [UIDevice currentDevice];
+        
+        NSString *carrierName;
+        NSString *isoCountryCode;
+        NSString *mobileCountryCode;
+        NSString *mobileNetworkCode;
+        CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
+        CTCarrier *carrier = [netInfo subscriberCellularProvider];
+        if (carrier != NULL) {
+            carrierName = [carrier carrierName];
+            isoCountryCode = [carrier isoCountryCode];
+            mobileCountryCode = [carrier mobileCountryCode];
+            mobileNetworkCode = [carrier mobileNetworkCode];
+        } else {
+            carrierName = @"";
+            isoCountryCode = @"";
+            mobileCountryCode = @"";
+            mobileNetworkCode = @"";
         }
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"appName：%@",appName]);
+            callback([NSString stringWithFormat:@"appVersion：%@",appVersion]);
+            callback([NSString stringWithFormat:@"systemName: %@", [device systemName]]);
+            callback([NSString stringWithFormat:@"systemVersion: %@", [device systemVersion]]);
 
-        self.callback(info);
+            callback([NSString stringWithFormat:@"carrierName: %@", carrierName]);
+            callback([NSString stringWithFormat:@"isoCountryCode: %@", isoCountryCode]);
+            callback([NSString stringWithFormat:@"mobileCountryCode: %@", mobileCountryCode]);
+            callback([NSString stringWithFormat:@"mobileNetworkCode: %@", mobileNetworkCode]);
 
-    }];
+        });
+        
+        
+        NSString *netType = [QDNetDeviceInfo getNetworkType];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"NetworkType：%@", netType]);
+        });
+
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"hostName：%@",self.hostName]);
+        });
+        
+        NSArray *ipArray = [QDNetDeviceInfo addressesForHostname:self.hostName];
+        NSString* ipStr = [ipArray componentsJoinedByString:@", "];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"HOST to IP：%@", ipStr]);
+        });
+        
+        NSArray* localIPArray = [QDNetDeviceInfo deviceIPAdress];
+        ipStr = [localIPArray componentsJoinedByString:@", "];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"本地IP：%@", ipStr]);
+        });
+        
+        NSArray* gatewayIpArray = [QDNetDeviceInfo getGatewayIPAddress];
+        NSString* gatewayIp = [gatewayIpArray componentsJoinedByString:@", "];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"本地网关：%@", gatewayIp]);
+        });
+
+        
+        NSArray *dnsArray = [QDNetDeviceInfo outPutDNSServers];
+        NSString* dns = [dnsArray componentsJoinedByString:@", "];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"本地DNS ：%@", dns]);
+        });
+        
+        dnsArray = [QDNetDeviceInfo getOutPutDNSServers];
+        dns = [dnsArray componentsJoinedByString:@", "];
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"本地DNS2：%@", dns]);
+        });
+        
+        dnsArray = [QDNetDeviceInfo getDNSsWithDormain: self.hostName];
+        dns = [dnsArray componentsJoinedByString:@", "];
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            callback([NSString stringWithFormat:@"通过域名 DNS解析结果：%@", dns]);
+        });
+                
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [self.ping startNetServerAndCallback:^(NSString *info, NSInteger flag) {
+                if (flag == InfoFlagEnd) {
+                    [self.traceroute startNetServerAndCallback:^(NSString *info_also, NSInteger flag) {
+                        self.callback(info_also);
+                        if (flag == InfoFlagEnd) {
+                            callback(@"end diagnostics");
+                            self.ompleteBlock();
+                            [self stop];
+                        }
+                    }];
+                }
+                
+                self.callback(info);
+                
+            }];
+        });
+    });
 }
 
 - (void)startPingAndCallback:(Callback) callback {

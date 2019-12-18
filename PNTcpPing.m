@@ -128,7 +128,7 @@ void tcp_conn_handler()
 
 - (void)sendAndRec
 {
-    _pingDetails = [NSMutableString stringWithString:@"\n"];
+    _pingDetails = [NSMutableString stringWithFormat:@"\nHost: %@, port:%lu\n", _host, (unsigned long)_port];
     NSString *ip = [self convertDomainToIp:_host];
     if (ip == NULL) {
         return;
