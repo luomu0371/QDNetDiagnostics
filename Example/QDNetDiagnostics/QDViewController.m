@@ -23,24 +23,18 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     // device info ping and traceroute
-    self.netDiagnostics = [[QDNetDiagnostics alloc] initWithHostName:@"www.suning.com"];
-    
-    [self.netDiagnostics startDiagnosticAndNetInfo:^(NSString *info) {
-        NSLog(@"%@",info);
+//    self.netDiagnostics = [[QDNetDiagnostics alloc] initWithHostName:@"login.hnhdhl.com"];
+//    
+//    [self.netDiagnostics startDiagnosticAndNetInfo:^(NSString *info) {
+//        NSLog(@"%@",info);
+//    } ompleteBlock:^{
+//        
+//    }];
+    [QDNetDiagnostics startTcpPing:@"session.hnhdhl.com" port:9500 ompleteBlock:^{
+        
     }];
     
-    // ping
-//    [self.netDiagnostics startPingAndCallback:^(NSString *info) {
-//        NSLog(@"%@",info);
-//    }];
     
-    //traceroute
-//    [self.netDiagnostics startTracerouteAndCallback:^(NSString *info) {
-//        NSLog(@"%@",info);
-//    }];
-    
-
-  
 }
 
 - (void)didReceiveMemoryWarning

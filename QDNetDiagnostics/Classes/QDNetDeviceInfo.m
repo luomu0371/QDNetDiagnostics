@@ -7,6 +7,8 @@
 //
 
 #import "QDNetDeviceInfo.h"
+#import "PNetReachability.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #include <resolv.h>
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -466,6 +468,79 @@
     }
     
     return address;
+}
+
+// 获取网络类型
++ (NSString* )getNetworkType
+{
+    NetworkType netType = NetworkTypeNone;
+    PNetReachability *reachNet = [PNetReachability reachabilityWithHostName:@"www.apple.com"];
+    PNetNetStatus net_status = [reachNet currentReachabilityStatus];
+    switch (net_status) {
+        case PNetReachable_None:
+            netType = NetworkTypeNone;
+            break;
+        case PNetReachable_WiFi:
+            netType = NetworkTypeWIFI;
+            break;
+        case PNetReachable_WWAN:
+        {
+            CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
+            NSString *curreNetType = netInfo.currentRadioAccessTechnology;
+            if ([curreNetType isEqualToString:CTRadioAccessTechnologyGPRS]) {
+                netType = NetworkType2G;
+            } else if([curreNetType isEqualToString:CTRadioAccessTechnologyEdge]){
+                netType = NetworkType2G;
+            } else if([curreNetType isEqualToString:CTRadioAccessTechnologyWCDMA] ||
+                     [curreNetType isEqualToString:CTRadioAccessTechnologyCDMAEVDORev0] ||
+                     [curreNetType isEqualToString:CTRadioAccessTechnologyCDMAEVDORevA] ||
+                     [curreNetType isEqualToString:CTRadioAccessTechnologyCDMAEVDORevB]){
+                netType = NetworkType3G;
+            } else if([curreNetType isEqualToString:CTRadioAccessTechnologyHSDPA]){
+                netType = NetworkType3G;
+            } else if([curreNetType isEqualToString:CTRadioAccessTechnologyHSUPA]){
+                netType = NetworkType3G;
+            } else if([curreNetType isEqualToString:CTRadioAccessTechnologyeHRPD]){
+                netType = NetworkType3G;
+            } else if([curreNetType isEqualToString:CTRadioAccessTechnologyLTE]){
+                netType = NetworkType4G;
+            } else {
+                netType = NetworkTypeWWAN_Unknown;
+            }
+        }
+            break;
+        default:
+            break;
+    }
+    
+    return [QDNetDeviceInfo networkTypeToString: netType];
+}
+
++ (NSString*) networkTypeToString:(NetworkType)type {
+    
+    NSString* str = @"none";
+    switch (type) {
+        case NetworkTypeNone:
+            return @"none";
+            break;
+        case NetworkTypeWIFI:
+            return @"WIFI";
+            break;
+        case NetworkTypeWWAN_Unknown:
+            return @"WWAN_Unknown";
+            break;
+        case NetworkType2G:
+            return @"2G";
+            break;
+        case NetworkType3G:
+            return @"3G";
+            break;
+        case NetworkType4G:
+             return @"4G";
+            break;
+    }
+    
+    return str;
 }
 
 @end

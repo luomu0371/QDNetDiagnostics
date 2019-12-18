@@ -9,6 +9,16 @@
 #import <Foundation/Foundation.h>
 
 
+typedef NS_ENUM(NSInteger, NetworkType) {
+    NetworkTypeNone,
+    NetworkTypeWIFI,
+    NetworkTypeWWAN_Unknown,
+    NetworkType2G,
+    NetworkType3G,
+    NetworkType4G,
+};
+
+
 @interface QDNetDeviceInfo : NSObject
 
 /// 根据域名获取IP地址
@@ -35,5 +45,7 @@
  * 获取当前设备网关地址
  */
 + (NSArray *)getGatewayIPAddress;
+
++ (NSString* )getNetworkType;
 
 @end

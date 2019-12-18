@@ -10,6 +10,8 @@
 
 typedef void(^Callback)(NSString *);
 
+typedef void(^CompleteCallback)(void);
+
 
 @interface QDNetDiagnostics : NSObject
 
@@ -18,9 +20,7 @@ typedef void(^Callback)(NSString *);
 
 - (instancetype)initWithHostName:(NSString *)hostName NS_DESIGNATED_INITIALIZER;
 
-- (void)startDiagnosticAndNetInfo:(Callback) callback;
+- (void)startDiagnosticAndNetInfo:(Callback)callback ompleteBlock: (CompleteCallback)completeBlock;
 
-- (void)startPingAndCallback:(Callback) callback;
-
-- (void)startTracerouteAndCallback:(Callback) callback;
++ (void)startTcpPing:(NSString*)host port:(NSUInteger)port ompleteBlock:(CompleteCallback)completeBlock;
 @end

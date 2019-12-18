@@ -9,6 +9,7 @@
 #import "QDNetDiagnostics.h"
 #import "QDNetDeviceInfo.h"
 #import "QDNetServerProtocol.h"
+#import "PNTcpPing.h"
 
 #import <UIKit/UIKit.h>
 #import <CoreTelephony/CTCarrier.h>
@@ -23,6 +24,8 @@
 @property (nonatomic, copy) Callback callback;
 @property (nonatomic, copy) Callback pingCallback;
 @property (nonatomic, copy) Callback tracerouteCallback;
+
+@property (nonatomic, copy) CompleteCallback ompleteBlock;
 @end
 
 @implementation QDNetDiagnostics
@@ -37,8 +40,9 @@
     return self;
 }
 
-- (void)startDiagnosticAndNetInfo:(Callback) callback {
+- (void)startDiagnosticAndNetInfo:(Callback)callback ompleteBlock: (CompleteCallback)completeBlock {
     self.callback = callback;
+    self.ompleteBlock = completeBlock;
 
     callback(@"begin diagnostics");
     
@@ -75,6 +79,9 @@
     callback([NSString stringWithFormat:@"mobileCountryCode: %@", mobileCountryCode]);
     callback([NSString stringWithFormat:@"mobileNetworkCode: %@", mobileNetworkCode]);
     
+    NSString *netType = [QDNetDeviceInfo getNetworkType];
+    callback([NSString stringWithFormat:@"NetworkType：%@", netType]);
+
     callback([NSString stringWithFormat:@"hostName：%@",self.hostName]);
     
     NSArray *ipArray = [QDNetDeviceInfo addressesForHostname:self.hostName];
@@ -108,6 +115,7 @@
                 self.callback(info_also);
                 if (flag == InfoFlagEnd) {
                     callback(@"end diagnostics");
+                    self.ompleteBlock();
                     [self stop];
                 }
             }];
@@ -148,5 +156,12 @@
     self.callback = nil;
     self.pingCallback = nil;
     self.tracerouteCallback = nil;
+    self.ompleteBlock = nil;
+}
+
++ (void)startTcpPing:(NSString*)host port:(NSUInteger)port ompleteBlock:(CompleteCallback)completeBlock {
+    [PNTcpPing start:host port:port count:5 complete:^(NSMutableString *info) {
+        NSLog(@"TCP:%@", info);
+    }];
 }
 @end
