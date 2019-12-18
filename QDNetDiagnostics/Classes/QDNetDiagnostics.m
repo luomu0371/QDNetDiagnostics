@@ -77,12 +77,30 @@
     
     callback([NSString stringWithFormat:@"hostName：%@",self.hostName]);
     
-    NSString *ip = [QDNetDeviceInfo getIPWithHostName:self.hostName];
-    callback([NSString stringWithFormat:@"ipAddress：%@",ip]);
+    NSArray *ipArray = [QDNetDeviceInfo addressesForHostname:self.hostName];
+    NSString* ipStr = [ipArray componentsJoinedByString:@", "];
+    callback([NSString stringWithFormat:@"HOST to IP：%@", ipStr]);
     
-    NSString *dns = [QDNetDeviceInfo outPutDNSServers];
-    callback([NSString stringWithFormat:@"dnsAddress：%@",dns]);
+    NSArray* localIPArray = [QDNetDeviceInfo deviceIPAdress];
+    ipStr = [localIPArray componentsJoinedByString:@", "];
+    callback([NSString stringWithFormat:@"本地IP：%@", ipStr]);
     
+    NSArray* gatewayIpArray = [QDNetDeviceInfo getGatewayIPAddress];
+    NSString* gatewayIp = [gatewayIpArray componentsJoinedByString:@", "];
+    callback([NSString stringWithFormat:@"本地网关：%@", gatewayIp]);
+
+    
+    NSArray *dnsArray = [QDNetDeviceInfo outPutDNSServers];
+    NSString* dns = [dnsArray componentsJoinedByString:@", "];
+    callback([NSString stringWithFormat:@"本地DNS ：%@", dns]);
+    
+    dnsArray = [QDNetDeviceInfo getOutPutDNSServers];
+    dns = [dnsArray componentsJoinedByString:@", "];
+    callback([NSString stringWithFormat:@"本地DNS2：%@", dns]);
+    
+    dnsArray = [QDNetDeviceInfo getDNSsWithDormain: self.hostName];
+    dns = [dnsArray componentsJoinedByString:@", "];
+    callback([NSString stringWithFormat:@"通过域名 DNS解析结果：%@", dns]);
     
     [self.ping startNetServerAndCallback:^(NSString *info, NSInteger flag) {
         if (flag == InfoFlagEnd) {
