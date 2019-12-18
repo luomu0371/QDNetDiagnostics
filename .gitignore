@@ -61,3 +61,9 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+Example/Pods/Target Support Files/Pods-QDNetDiagnostics_Example/Pods-QDNetDiagnostics_Example-Info.plist
+Example/Pods/Target Support Files/Pods-QDNetDiagnostics_Tests/Pods-QDNetDiagnostics_Tests-Info.plist
+Example/Pods/Target Support Files/QDNetDiagnostics/QDNetDiagnostics-Info.plist
+Example/QDNetDiagnostics.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+Example/QDNetDiagnostics.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+Example/QDNetDiagnostics.xcworkspace/contents.xcworkspacedata

@@ -1,6 +1,6 @@
 {
   "name": "QDNetDiagnostics",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "summary": "Net Diagnostics",
   "description": "Net Diagnostics",
   "homepage": "https://github.com/dongqihouse/QDNetDiagnostics",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/dongqihouse/QDNetDiagnostics.git",
-    "tag": "0.1.0"
+    "tag": "0.1.1"
   },
   "platforms": {
     "ios": "8.0"
