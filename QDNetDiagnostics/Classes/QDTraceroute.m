@@ -8,7 +8,7 @@
 
 #import "QDTraceroute.h"
 
-#define kHopsMax  15
+#define kHopsMax  5
 #define kTracerouteTimeout 3
 
 @interface QDTraceroute()<QDSimplePingDelegate>

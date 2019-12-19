@@ -10,12 +10,15 @@
 #endif
 #endif
 
+#import "PNetReachability.h"
+#import "PNTcpPing.h"
 #import "QDNetDeviceInfo.h"
 #import "QDNetDiagnostics.h"
 #import "QDNetServerProtocol.h"
 #import "QDPing.h"
 #import "QDSimplePing.h"
 #import "QDTraceroute.h"
+#import "Route.h"
 
 FOUNDATION_EXPORT double QDNetDiagnosticsVersionNumber;
 FOUNDATION_EXPORT const unsigned char QDNetDiagnosticsVersionString[];
