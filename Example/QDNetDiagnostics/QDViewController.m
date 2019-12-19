@@ -32,8 +32,8 @@
         [self.netDiagnostics startDiagnosticAndNetInfo:^(NSString *info) {
             NSLog(@"%@",info);
         } ompleteBlock:^{
-            [QDNetDiagnostics startTcpPing:@"www.baidu.com" port:8080 ompleteBlock:^{
-                
+            [QDNetDiagnostics startTcpPing:@"www.baidu.com" port:8000 ompleteBlock:^(NSString *info) {
+                NSLog(@"TCP: %@",info);
             }];
         }];
     }];

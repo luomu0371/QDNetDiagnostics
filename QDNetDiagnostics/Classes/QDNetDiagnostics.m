@@ -186,9 +186,9 @@
     self.ompleteBlock = nil;
 }
 
-+ (void)startTcpPing:(NSString*)host port:(NSUInteger)port ompleteBlock:(CompleteCallback)completeBlock {
++ (void)startTcpPing:(NSString*)host port:(NSUInteger)port ompleteBlock:(Callback)completeBlock {
     [PNTcpPing start:host port:port count:5 complete:^(NSMutableString *info) {
-        NSLog(@"TCP:%@", info);
+        completeBlock(info);
     }];
 }
 @end

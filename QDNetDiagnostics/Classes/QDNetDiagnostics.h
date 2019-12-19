@@ -22,5 +22,5 @@ typedef void(^CompleteCallback)(void);
 
 - (void)startDiagnosticAndNetInfo:(Callback)callback ompleteBlock: (CompleteCallback)completeBlock;
 
-+ (void)startTcpPing:(NSString*)host port:(NSUInteger)port ompleteBlock:(CompleteCallback)completeBlock;
++ (void)startTcpPing:(NSString*)host port:(NSUInteger)port ompleteBlock:(Callback)completeBlock;
 @end
