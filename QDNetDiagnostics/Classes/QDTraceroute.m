@@ -62,9 +62,12 @@
 }
 - (void)traceroute {
     if (self.hopNum == kHopsMax) {
+        NSString *info = @"Traceroute to HopsMax";
+        self.callback(info, InfoFlagEnd);
         [self stopTraceroute];
         return ;
     }
+    
     self.info = @"";
     self.sendIndex = 0;
     self.hopNum += 1;
